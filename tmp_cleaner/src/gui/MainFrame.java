@@ -2,8 +2,18 @@ package gui;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import tmp_cleaner.Cleaner;
 import tmp_cleaner.Settings;
+import util.MesDial;
 
 /**
  * The Main Frame of the Cleaner Application
@@ -14,6 +24,7 @@ public class MainFrame extends GUI {
 
     private Settings settings;
     private Cleaner cleaner;
+    private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public MainFrame(Settings aSettings) {
         settings = aSettings;
@@ -32,26 +43,110 @@ public class MainFrame extends GUI {
         super.setFrameLocationCenter();
         this.setVisible(true);
     }
-    
+
     private void simulate() {
-        
-    }
-    
-    private void clean() {
-        
-    }
-    
-    private void exclude() {
-        
+        if (parseSettings()) {
+            //initialising and executing gather method of cleaner
+            cleaner = new Cleaner(settings);
+            File[] files = cleaner.gather();
+
+            //dumping the gather filenames in an ArrayList
+            ArrayList<String> fileNames = new ArrayList();
+            for (int i = 0; i < files.length; i++) {
+                fileNames.add(files[i].getName());
+            }
+
+            //populating the JList
+            DefaultListModel listModel = new DefaultListModel();
+            for (String name : fileNames) {
+                listModel.addElement(name);
+                System.out.println(name);
+            }
+            simulationList = new JList(listModel);
+        }
     }
 
-    private void loadSettings() {
-    
+    private void clean() {
     }
-    
+
+    private void exclude() {
+        MesDial.notImplementedError(this);
+    }
+
+    /**
+     * Loads and fills the saved settings
+     */
+    private void loadSettings() {
+        try {
+            //loading the date
+            String dateS = df.format(settings.getDate());
+            dateF.setText(dateS);
+
+            //loading the folder location
+            locationF.setText(settings.getLocation());
+
+            //loading the directory checkbox
+            if (settings.isDir()) {
+                dirChk.setSelected(true);
+            } else {
+                dirChk.setSelected(false);
+            }
+        } catch (Exception x) {
+            MesDial.loadSettingsError(this);
+            x.printStackTrace();
+        }
+    }
+
+    /**
+     * Parses the settings and returns whether the parsing was successful
+     *
+     * @return
+     */
     private boolean parseSettings() {
         boolean parsingSuccessful = true;
+
+        //starting with the date first
+        Date date = null;
+        try {
+            date = df.parse(dateF.getText());
+        } catch (Exception x) {
+            MesDial.dateFormatError(this);
+            parsingSuccessful = false;
+            x.printStackTrace();
+        }
+
+        //continuing with the directory
+        File file = null;
+        try {
+            file = new File(locationF.getText());
+        } catch (Exception x) {
+            MesDial.directoryError(this);
+            parsingSuccessful = false;
+            x.printStackTrace();
+        }
+
+        //finally reaching directories option
+        boolean dir;
+        if (dirChk.isSelected()) {
+            dir = true;
+        } else {
+            dir = false;
+        }
+
+        if (parsingSuccessful) {
+            try {
+                settings = new Settings(date, file.getCanonicalPath(), dir);
+            } catch (IOException ex) {
+                MesDial.directoryError(this);
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
         return parsingSuccessful;
+    }
+
+    public void shutdown() {
+        System.exit(0);
     }
 
     /**
@@ -68,9 +163,9 @@ public class MainFrame extends GUI {
         statusL = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        dateL = new javax.swing.JFormattedTextField();
+        dateF = new javax.swing.JFormattedTextField();
         jLabel4 = new javax.swing.JLabel();
-        locationL = new javax.swing.JTextField();
+        locationF = new javax.swing.JTextField();
         browseBtn = new javax.swing.JButton();
         dirChk = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
@@ -80,7 +175,7 @@ public class MainFrame extends GUI {
         excludeBtn = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        simulationList = new javax.swing.JList();
         jPanel5 = new javax.swing.JPanel();
         progressB = new javax.swing.JProgressBar();
 
@@ -127,11 +222,11 @@ public class MainFrame extends GUI {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateL, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(dateF, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(locationL)))
+                        .addComponent(locationF)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(browseBtn)
@@ -144,12 +239,12 @@ public class MainFrame extends GUI {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(dateL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dirChk))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(locationL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(locationF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseBtn))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
@@ -157,8 +252,18 @@ public class MainFrame extends GUI {
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         quitBtn.setText("<Quit");
+        quitBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitBtnActionPerformed(evt);
+            }
+        });
 
         simulateBtn.setText("Simulate");
+        simulateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                simulateBtnActionPerformed(evt);
+            }
+        });
 
         cleanBtn.setText("Clean");
 
@@ -193,7 +298,7 @@ public class MainFrame extends GUI {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(simulationList);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -208,7 +313,7 @@ public class MainFrame extends GUI {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -263,26 +368,34 @@ public class MainFrame extends GUI {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void simulateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulateBtnActionPerformed
+        simulate();
+    }//GEN-LAST:event_simulateBtnActionPerformed
+
+    private void quitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitBtnActionPerformed
+        shutdown();
+    }//GEN-LAST:event_quitBtnActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseBtn;
     private javax.swing.JButton cleanBtn;
-    private javax.swing.JFormattedTextField dateL;
+    private javax.swing.JFormattedTextField dateF;
     private javax.swing.JCheckBox dirChk;
     private javax.swing.JButton excludeBtn;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField locationL;
+    private javax.swing.JTextField locationF;
     private javax.swing.JProgressBar progressB;
     private javax.swing.JButton quitBtn;
     private javax.swing.JButton simulateBtn;
+    private javax.swing.JList simulationList;
     private javax.swing.JLabel statusL;
     // End of variables declaration//GEN-END:variables
 }

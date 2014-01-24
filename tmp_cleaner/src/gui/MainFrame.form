@@ -114,12 +114,12 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="dateL" min="-2" pref="177" max="-2" attributes="0"/>
+                          <Component id="dateF" min="-2" pref="177" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="locationL" max="32767" attributes="0"/>
+                          <Component id="locationF" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -137,13 +137,13 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="dateL" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dateF" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="dirChk" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="locationL" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="locationF" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="browseBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="16" max="32767" attributes="0"/>
@@ -157,14 +157,14 @@
             <Property name="text" type="java.lang.String" value="Delete files created before: "/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="dateL">
+        <Component class="javax.swing.JFormattedTextField" name="dateF">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Directory:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="locationL">
+        <Component class="javax.swing.JTextField" name="locationF">
         </Component>
         <Component class="javax.swing.JButton" name="browseBtn">
           <Properties>
@@ -223,11 +223,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="&lt;Quit"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quitBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="simulateBtn">
           <Properties>
             <Property name="text" type="java.lang.String" value="Simulate"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="simulateBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="cleanBtn">
           <Properties>
@@ -264,7 +270,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="153" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="155" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -278,7 +284,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JList" name="jList1">
+            <Component class="javax.swing.JList" name="simulationList">
               <Properties>
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="0"/>

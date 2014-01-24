@@ -5,3 +5,4 @@
 *.war
 *.ear
 /tmp_cleaner/nbproject/private/
+/tmp_cleaner/build/

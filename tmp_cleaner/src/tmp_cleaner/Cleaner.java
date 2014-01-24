@@ -65,6 +65,7 @@ public class Cleaner {
         }
 
         //dumping the "buffer" to an array again
+        files = new File[fileL.size()];
         for (int i = 0; i < fileL.size(); i++) {
             files[i] = fileL.get(i);
         }

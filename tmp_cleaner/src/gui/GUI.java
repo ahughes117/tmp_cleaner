@@ -25,10 +25,6 @@ public abstract class GUI extends JFrame {
         this.setLocation(windowX, windowY);
     }
 
-    protected void shutdown() {
-        this.dispose();
-    }
-
     public void popupMenuField(JTextField aTf) {
 
         JPopupMenu popupMenu = new JPopupMenu();
