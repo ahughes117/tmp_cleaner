@@ -1,15 +1,57 @@
-
 package gui;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import tmp_cleaner.Cleaner;
+import tmp_cleaner.Settings;
 
 /**
  * The Main Frame of the Cleaner Application
- * 
+ *
  * @author alexhughes
  */
 public class MainFrame extends GUI {
 
-    public MainFrame() {
+    private Settings settings;
+    private Cleaner cleaner;
+
+    public MainFrame(Settings aSettings) {
+        settings = aSettings;
+
         initComponents();
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                shutdown();
+            }
+        });
+
+        if (settings != null) {
+            loadSettings();
+        }
+
+        super.setFrameLocationCenter();
+        this.setVisible(true);
+    }
+    
+    private void simulate() {
+        
+    }
+    
+    private void clean() {
+        
+    }
+    
+    private void exclude() {
+        
+    }
+
+    private void loadSettings() {
+    
+    }
+    
+    private boolean parseSettings() {
+        boolean parsingSuccessful = true;
+        return parsingSuccessful;
     }
 
     /**
@@ -69,7 +111,7 @@ public class MainFrame extends GUI {
 
         jLabel3.setText("Delete files created before: ");
 
-        jLabel4.setText("Location: ");
+        jLabel4.setText("Directory:");
 
         browseBtn.setText("Browse");
 
@@ -166,7 +208,7 @@ public class MainFrame extends GUI {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -221,8 +263,6 @@ public class MainFrame extends GUI {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseBtn;
     private javax.swing.JButton cleanBtn;
