@@ -44,13 +44,16 @@ public class MainFrame extends GUI {
         this.setVisible(true);
     }
 
+    /**
+     * Simulates the cleaner action and fills the JList with the results
+     */
     private void simulate() {
         if (parseSettings()) {
             //initialising and executing gather method of cleaner
             cleaner = new Cleaner(settings);
             File[] files = cleaner.gather();
 
-            //dumping the gather filenames in an ArrayList
+            //dumping the gathered filenames in an ArrayList
             ArrayList<String> fileNames = new ArrayList();
             for (int i = 0; i < files.length; i++) {
                 fileNames.add(files[i].getName());
@@ -60,13 +63,19 @@ public class MainFrame extends GUI {
             DefaultListModel listModel = new DefaultListModel();
             for (String name : fileNames) {
                 listModel.addElement(name);
-                System.out.println(name);
             }
-            simulationList = new JList(listModel);
+            simulationList.setModel(listModel);
         }
     }
 
     private void clean() {
+        //executing simulation in order to print the files in the list
+        simulate();
+        
+        //executing clean method of cleaner
+        cleaner.clean();
+
+        MesDial.fileDeletionSuccess(this);
     }
 
     private void exclude() {
